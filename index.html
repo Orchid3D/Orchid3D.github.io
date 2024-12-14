@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="description"
+      content="Orchid: Image Latent Diffusion for Joint Appearance and Geometry Generation"
+    />
+    <meta
+      name="keywords"
+      content="depth, normal, estimation, monocular, scene, reconstruction"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:image:src" content="" />
+    <meta name="twitter:title" content="Orchid" />
+    <meta
+      name="twitter:description"
+      content="Image Latent Diffusion for Joint Appearance and Geometry Generation"
+    />
+    <meta name="twitter:creator" content="@shay_krishnan" />
+
+    <title>
+      Orchid: Image Latent Diffusion for Joint Appearance and Geometry
+      Generation
+    </title>
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./css/bulma.min.css" />
+    <link rel="stylesheet" href="./css/bulma-carousel.min.css" />
+    <link rel="stylesheet" href="./css/bulma-slider.min.css" />
+    <link rel="stylesheet" href="./css/twentytwenty.css" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="icon" href="./images/orchid-favicon.svg" />
+
+    <script src="./js/jquery-3.2.1.min.js"></script>
+    <script src="./js/jquery.event.move.js"></script>
+    <script src="./js/jquery.twentytwenty.js"></script>
+    <script src="./js/bulma-carousel.min.js"></script>
+    <script src="./js/bulma-slider.min.js"></script>
+    <script src="./js/fontawesome.all.min.js"></script>
+
+    <!--MathJax-->
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [
+            ["$", "$"],
+            ["\\(", "\\)"],
+          ],
+        },
+        svg: {
+          fontCache: "global",
+        },
+      };
+    </script>
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+    ></script>
+  </head>
+  <body>
+    <section class="hero">
+      <div class="hero-body">
+        <div class="container is-max-desktop">
+          <div class="columns is-centered">
+            <div class="column has-text-centered">
+              <h1 class="title is-1 publication-title">
+                Orchid: Image Latent Diffusion for Joint Appearance and Geometry
+                Generation
+              </h1>
+              <!-- <h3 class="title has-text-centered">TBD venue</h3> -->
+              <div class="is-size-5 publication-authors">
+                <span class="author-block">
+                  <a
+                    href="http://akshay-krishnan.github.io/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Akshay Krishnan</a
+                  >
+                  <sup><small>1, 2</small></sup
+                  >,
+                </span>
+                <span class="author-block">
+                  <a
+                    href="https://sites.google.com/site/skywalkeryxc"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Xinchen Yan</a
+                  >
+                  <sup><small>1</small></sup
+                  >,
+                </span>
+                <span class="author-block">
+                  <a
+                    href="https://casser.io/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Vincent Kasser</a
+                  >
+                  <sup><small>1</small></sup
+                  >,
+                </span>
+                <span class="author-block">
+                  <a
+                    href="https://abhijitkundu.info/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Abhijit Kundu</a
+                  ><sup><small>1</small></sup>
+                </span>
+              </div>
+
+              <div class="is-size-5 publication-authors">
+                <span class="author-block"
+                  ><sup><small>1</small></sup
+                  >Google DeepMind, <sup><small>2</small></sup
+                  >Georgia Institute of Technology</span
+                >
+              </div>
+
+              <div class="column has-text-centered">
+                <div class="publication-links">
+                  <span class="link-block">
+                    <a
+                      href=""
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="external-link button is-normal is-rounded is-dark"
+                    >
+                      <span class="icon">
+                        <i class="fas fa-file-pdf" style="color: orangered"></i>
+                      </span>
+                      <span>Paper</span>
+                    </a>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero teaser">
+      <div class="container is-max-desktop">
+        <div class="hero-body">
+          <img
+            id="teaser"
+            width="100%"
+            src="./images/orchid_teaser.jpg"
+            alt="Orchid teaser demonstrating applications."
+          />
+          <h4 class="has-text-centered">
+            <span class="methodname">Orchid</span> is a unified image diffusion
+            model for joint color, depth, and surface normal generation. It is a
+            flexible generative prior that can be used for multiple
+            applications.
+          </h4>
+        </div>
+      </div>
+    </section>
+
+    <section class="section pt-0">
+      <div class="container is-max-desktop">
+        <!-- Abstract. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Overview</h2>
+            <div class="content has-text-justified">
+              <p>
+                Diffusion models trained on large datasets capture expressive
+                image priors which have been used for generating images,
+                predicting geometry (depth, surface normals) from images, and
+                for inverse problems like inpainting. However, these tasks
+                typically require a separate model, eg. one each for generating
+                images, depth prediction, and surface normal prediction. In this
+                paper, we propose a novel image diffusion prior that jointly
+                encodes appearance and geometry.
+              </p>
+              <p>
+                We introduce a diffusion model
+                <span class="methodname">Orchid</span>, comprising a Variational
+                Autoencoder (VAE) to encode color, depth, and surface normals to
+                a latent space, and a Latent Diffusion Model (LDM) for
+                generating these joint latents. Orchid directly
+                <b
+                  >generates color, relative depth, and surface normals from
+                  text</b
+                >, and can be used to seamlessly create image aligned partial 3D
+                scenes. It can also perform image-conditioned tasks like
+                <b> monocular depth and normal prediction jointly</b> and is
+                competitive in accuracy to state-of-the-art methods designed for
+                those tasks alone. Since our model learns a joint prior, it can
+                be used zero-shot as a regularizer for many inverse problems
+                that entangle appearance and geometry. For example, we
+                demonstrate its effectiveness for
+                <b>joint color-depth-normal inpainting</b>, showcasing its
+                applicability as a prior for sparse view 3D generation.
+              </p>
+            </div>
+          </div>
+        </div>
+        <!--/ Abstract. -->
+      </div>
+    </section>
+
+    <section class="section pt-0 pb-4">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Text conditioned generation</h2>
+            <div class="content has-text-justified">
+              <p>
+                Orchid can jointly generate color, depth and surface normal
+                images from a text prompt in a single diffusion process.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small mt-4">
+      <div class="hero-body">
+        <div class="container">
+          <div
+            id="t2i-results-carousel-horizontal"
+            class="carousel results-carousel"
+          >
+            <div class="is-centered has-text-centered">
+              <i
+                >“A purple orchid flower in full bloom, <br />dark
+                background.”</i
+              >
+              <div class="twoitem">
+                <div>
+                  <img src="./images/text_conditioned/t2i_1.jpg" />
+                </div>
+                <div>
+                  <img src="./images/text_conditioned/t2i_2.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <div class="is-centered has-text-centered">
+              <i
+                >““A pair of well-worn hiking boots, caked in mud and resting on
+                a rocky trail.”</i
+              >
+              <div class="twoitem">
+                <div>
+                  <img src="./images/text_conditioned/t2i_3.jpg" />
+                </div>
+                <div>
+                  <img src="./images/text_conditioned/t2i_4.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <div class="is-centered has-text-centered">
+              <i
+                >“Alpacas wearing knit wool sweaters, sunglasses, in the
+                classroom.”</i
+              >
+              <div class="twoitem">
+                <div>
+                  <img src="./images/text_conditioned/t2i_5.jpg" />
+                </div>
+                <div>
+                  <img src="./images/text_conditioned/t2i_6.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <div class="is-centered has-text-centered">
+              <i
+                >“A cute 1970's convertible sports car sits in front of a pub, a
+                charming English village scene.”</i
+              >
+              <div class="twoitem">
+                <div>
+                  <img src="./images/text_conditioned/t2i_7.jpg" />
+                </div>
+                <div>
+                  <img src="./images/text_conditioned/t2i_8.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <div class="is-centered has-text-centered">
+              <i
+                >“A Corgi dog on a skateboard in Times Square wearing sunglasses
+                and a beach hat. NYC buildings in background.”</i
+              >
+              <div class="twoitem">
+                <div>
+                  <img src="./images/text_conditioned/t2i_9.jpg" />
+                </div>
+                <div>
+                  <img src="./images/text_conditioned/t2i_10.jpg" />
+                </div>
+              </div>
+            </div>
+
+            <div class="is-centered has-text-centered">
+              <i
+                >“A bedroom with a pretty canopy bed, fluffy pillows and a
+                dresser with a mirror”</i
+              >
+              <div class="twoitem">
+                <div>
+                  <img src="./images/text_conditioned/t2i_11.jpg" />
+                </div>
+                <div>
+                  <img src="./images/text_conditioned/t2i_12.jpg" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <br />
+    <br />
+    <section class="section pt-0 pb-4">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Monocular joint depth-normal prediction</h2>
+            <div class="content has-text-justified">
+              <p>
+                Orchid can jointly generate color, depth and surface normal
+                images from a text prompt in a single diffusion process. We use
+                the predicted depth and normal images along with the input color
+                to train Gaussian Splats for novel-view synthesis from a single
+                image. These results are shown below:
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small mt-4">
+      <div class="hero-body">
+        <div class="container">
+          <div id="results-carousel-vertical" class="carousel results-carousel">
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_img13.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img13_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem"">
+              <div class="cmpcontent">
+                <img src="./images/splat_renders/input_img1.png" height="512" />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img1_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_img16.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img16_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div  class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_files_einstein.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/files_einstein_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem"">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_img31.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img31_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_img32.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img32_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img src="./images/splat_renders/input_img9.png" height="512" />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img2_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img src="./images/splat_renders/input_img6.png" height="512" />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img6_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_img19.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img19_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_files_monster.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/monster_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_anton-NcNB-wvGA8w-unsplash.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/anton-NcNB-wvGA8w-unsplash_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_files_indoor.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/files_indoor_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_indoor4.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/indoor4_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <br/>
+    <br/>
+
+    <section class="section pt-0 pb-4">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <div class="content has-text-justified">
+              <p>
+                We also visualize below the predicted depth and surface normal images
+                for input color images, and compare our results to previous work
+                on joint depth-normal prediction using Diffusion models
+                (GeoWizard).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small mt-4">
+      <div class="hero-body">
+        <div class="container">
+          <div
+            id="results-carousel-horizontal"
+            class="carousel results-carousel"
+          >
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img1.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img1.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img1.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img1.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img3.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img3.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img3.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img3.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img5.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img5.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img5.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img5.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img6.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img6.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img6.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img6.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img7.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img7.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img7.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img7.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img9.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img9.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img9.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img9.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img30.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img30.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img30.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img30.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img13.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img13.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img13.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img13.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img15.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img15.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img15.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img15.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img17.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img17.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img17.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img17.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img19.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img19.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwdcolor_img19.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/oursidepth_img19.png" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small mt-4">
+      <div class="hero-body">
+        <div class="container">
+          <div
+            id="results-carousel-horizontal"
+            class="carousel results-carousel"
+          >
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img1.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img1.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img1.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img1.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img3.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img3.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img3.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img3.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img5.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img5.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img5.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img5.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img6.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img6.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img6.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img6.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img7.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img7.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img7.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img7.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img9.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img9.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img9.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img9.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img30.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img30.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img30.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img30.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img13.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img13.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img13.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img13.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img15.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img15.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img15.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img15.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img17.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img17.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img17.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img17.png" />
+                </div>
+              </div>
+            </div>
+
+            <div class="twoitem">
+              <div class="twentytwenty-container twentytwenty-container-top">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/input_img19.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img19.png" />
+                </div>
+              </div>
+              <div class="twentytwenty-container twentytwenty-container-bottom">
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/gwncolor_img19.png" />
+                </div>
+                <div class="cmpcontent">
+                  <img src="./images/in_the_wild/normal_img19.png" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Method. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">Joint color-depth-normal inpainting</h2>
+            <div class="content has-text-justified">
+              Orchid's joint color-depth-normal prior can be used for inverse
+              problems in the multimodal space, such as joint inpainting. Given
+              color, depth, and normals with a mask to be inpainted (color alone
+              is shown on the left), we show results for jointly inpainting all
+              three modalities.
+            </div>
+            <img src="./images/inpainting_website.svg" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container is-max-desktop">
+        <!-- Method. -->
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <h2 class="title is-3">How does it work?</h2>
+            <div class="content has-text-justified">
+              <h3 class="title has-text-centered">Orchid training</h3>
+
+              <p>
+                We first train a new VAE to jointly encode color, depth and
+                normal to a latent space. We then finetune a pretrained latent
+                diffusion model for text-conditioned denoising on the joint
+                latent space. We use a distillation loss during the VAE training
+                to ensure that the joint latent space is structurally similar to
+                the color-only latent used for pretraining.
+              </p>
+
+              <img
+                id="method_train"
+                width="100%"
+                src="./images/architecture_training.svg"
+                alt="Orchid training scheme"
+              />
+
+              <h3 class="title has-text-centered">Inference scheme</h3>
+
+              <p>
+                The trained Orchid model can be readily used to generate color,
+                depth and normals from text (a). For image-conditioned depth and
+                normal prediction (b), we further finetune Orchid with an
+                additional color-only latent input, while diffusing the same
+                joint latent.
+              </p>
+
+              <img
+                id="method_inference"
+                width="100%"
+                src="./images/architecture_inference_website.svg"
+                alt="Orchid inference scheme"
+              />
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      $(window).on("load", function () {
+        bulmaCarousel.attach("#t2i-results-carousel-horizontal", {
+          slidesToScroll: 1,
+          slidesToShow: 3,
+          loop: true,
+          autoplay: true,
+        });
+
+        bulmaCarousel.attach("#results-carousel-horizontal", {
+          slidesToScroll: 1,
+          slidesToShow: 3,
+          loop: true,
+          autoplay: true,
+        });
+
+        bulmaCarousel.attach("#results-carousel-vertical", {
+          slidesToScroll: 1,
+          slidesToShow: 5,
+          loop: true,
+          autoplay: true,
+        });
+
+        bulmaCarousel.attach("#results-carousel-testimonials", {
+          slidesToScroll: 1,
+          slidesToShow: 3,
+          loop: true,
+          autoplay: true,
+          breakpoints: [
+            {
+              changePoint: 50 + 260 * 2,
+              slidesToShow: 1,
+              slidesToScroll: 1,
+              loop: true,
+              autoplay: true,
+            },
+            {
+              changePoint: 50 + 260 * 3,
+              slidesToShow: 2,
+              slidesToScroll: 1,
+              loop: true,
+              autoplay: true,
+            },
+            {
+              changePoint: 50 + 260 * 4,
+              slidesToShow: 3,
+              slidesToScroll: 1,
+              loop: true,
+              autoplay: true,
+            },
+          ],
+        });
+
+        $(".twentytwenty-container-top").twentytwenty({
+          before_label: "Input",
+          after_label: "Ours",
+          default_offset_pct: 0.75,
+        });
+
+        $(".twentytwenty-container-bottom").twentytwenty({
+          before_label: "GeoWizard",
+          after_label: "Ours",
+          default_offset_pct: 0.5,
+        });
+
+        $(".results-carousel").css({
+          "max-height": "2000px",
+          visibility: "visible",
+        });
+      });
+    </script>
+
+    <section class="section" id="BibTeX">
+      <div class="container is-max-desktop content">
+        <h2 class="title">Citation</h2>
+        <pre class="selectable"><code>TODO</code></pre>
+      </div>
+    </section>
+
+    <footer class="footer pt-4 pb-0">
+      <div class="container">
+        <div class="columns is-centered">
+          <div class="column is-8">
+            <div class="content">
+              <p>
+                Website template based on
+                <a href="https://github.com/nerfies/nerfies.github.io">
+                  Nerfies
+                </a>
+                and licensed under
+                <a
+                  rel="license"
+                  href="http://creativecommons.org/licenses/by-sa/4.0/"
+                >
+                  CC-BY-SA-4.0 </a
+                >.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
