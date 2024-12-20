@@ -342,264 +342,15 @@
             <h2 class="title is-3">Monocular joint depth-normal prediction</h2>
             <div class="content has-text-justified">
               <p>
-                Orchid can jointly generate color, depth and surface normal
-                images from a text prompt in a single diffusion process. We use
-                the predicted depth and normal images along with the input color
-                to train Gaussian Splats for novel-view synthesis from a single
-                image. These results are shown below:
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="hero is-light is-small mt-4">
-      <div class="hero-body">
-        <div class="container">
-          <div id="results-carousel-vertical" class="carousel results-carousel">
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_img13.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img13_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem"">
-              <div class="cmpcontent">
-                <img src="./images/splat_renders/input_img1.png" height="512" />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img1_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_img16.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img16_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div  class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_files_einstein.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/files_einstein_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem"">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_img31.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img31_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_img32.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img32_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img src="./images/splat_renders/input_img9.png" height="512" />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img2_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img src="./images/splat_renders/input_img6.png" height="512" />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img6_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_img19.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/img19_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_files_monster.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/monster_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_anton-NcNB-wvGA8w-unsplash.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/anton-NcNB-wvGA8w-unsplash_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_files_indoor.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/files_indoor_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-
-            <div class="twoitem">
-              <div class="cmpcontent">
-                <img
-                  src="./images/splat_renders/input_indoor4.png"
-                  height="512"
-                />
-              </div>
-              <div class="cmpcontent">
-                <video loop autoplay muted>
-                  <source
-                    src="./images/splat_renders/indoor4_padded.mp4"
-                    type="video/mp4"
-                  />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <br/>
-    <br/>
-
-    <section class="section pt-0 pb-4">
-      <div class="container is-max-desktop">
-        <div class="columns is-centered has-text-centered">
-          <div class="column is-four-fifths">
-            <div class="content has-text-justified">
-              <p>
-                We also visualize below the predicted depth and surface normal images
-                for input color images, and compare our results to previous work
-                on joint depth-normal prediction using Diffusion models
-                (GeoWizard).
+                Orchid can also jointly generate geometry (depth and surface
+                normals) from input images with additional image-conditioned
+                finetuning. We visualize below the joint depth and surface
+                normal predictions for input color images, and compare our
+                results to previous work on joint depth-normal prediction using
+                Diffusion models:
+                <a href="https://fuxiao0719.github.io/projects/geowizard"
+                  >GeoWizard</a
+                >.
               </p>
             </div>
           </div>
@@ -1047,6 +798,239 @@
       </div>
     </section>
 
+    <br/>
+    <br/>
+
+    <section class="section pt-0 pb-4">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-four-fifths">
+            <div class="content has-text-justified">
+              We use the depth and normals predicted by Orchid to train
+              3D Gaussian Splats from a single input image. We show renders of 3D
+              gaussians below:
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="hero is-light is-small mt-4">
+      <div class="hero-body">
+        <div class="container">
+          <div id="results-carousel-vertical" class="carousel results-carousel">
+            <div class="twoitem">
+              <div class="cmpcontent">
+                <img
+                  src="./images/splat_renders/input_img13.png"
+                  height="512"
+                />
+              </div>
+              <div class="cmpcontent">
+                <video loop autoplay muted>
+                  <source
+                    src="./images/splat_renders/img13_padded.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+            </div>
+
+            <div class="twoitem"">
+            <div class="cmpcontent">
+              <img src="./images/splat_renders/input_img1.png" height="512" />
+            </div>
+            <div class="cmpcontent">
+              <video loop autoplay muted>
+                <source
+                  src="./images/splat_renders/img1_padded.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          <div class="twoitem">
+            <div class="cmpcontent">
+              <img src="./images/splat_renders/input_img16.png" height="512" />
+            </div>
+            <div class="cmpcontent">
+              <video loop autoplay muted>
+                <source
+                  src="./images/splat_renders/img16_padded.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          <div class="twoitem">
+            <div class="cmpcontent">
+              <img
+                src="./images/splat_renders/input_files_einstein.png"
+                height="512"
+              />
+            </div>
+            <div class="cmpcontent">
+              <video loop autoplay muted>
+                <source
+                  src="./images/splat_renders/files_einstein_padded.mp4"
+                  type="video/mp4"
+                />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          </div>
+
+          <div class="twoitem"">
+          <div class="cmpcontent">
+            <img src="./images/splat_renders/input_img31.png" height="512" />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/img31_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img src="./images/splat_renders/input_img32.png" height="512" />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/img32_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img src="./images/splat_renders/input_img9.png" height="512" />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/img2_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img src="./images/splat_renders/input_img6.png" height="512" />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/img6_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img src="./images/splat_renders/input_img19.png" height="512" />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/img19_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img
+              src="./images/splat_renders/input_files_monster.png"
+              height="512"
+            />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/monster_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img
+              src="./images/splat_renders/input_anton-NcNB-wvGA8w-unsplash.png"
+              height="512"
+            />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/anton-NcNB-wvGA8w-unsplash_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img
+              src="./images/splat_renders/input_files_indoor.png"
+              height="512"
+            />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/files_indoor_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+
+        <div class="twoitem">
+          <div class="cmpcontent">
+            <img src="./images/splat_renders/input_indoor4.png" height="512" />
+          </div>
+          <div class="cmpcontent">
+            <video loop autoplay muted>
+              <source
+                src="./images/splat_renders/indoor4_padded.mp4"
+                type="video/mp4"
+              />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="section">
       <div class="container is-max-desktop">
         <!-- Method. -->
@@ -1107,7 +1091,6 @@
                 src="./images/architecture_inference_website.svg"
                 alt="Orchid inference scheme"
               />
-
             </div>
           </div>
         </div>
